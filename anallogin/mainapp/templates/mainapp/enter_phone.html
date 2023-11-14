@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ввод телефона</title>
+</head>
+<body>
+
+<div>
+
+<form action="{% url 'mainapp:enter_phone' %}" id="phone-send" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Отправить</button> 
+</form>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var myForm = document.getElementById('phone-send');
+
+    myForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var phoneValue = document.getElementById('phone').value;
+
+    localStorage.setItem('phone', phoneValue);
+
+    myForm.submit();
+    });
+});
+</script>
+</body>
+</html>
