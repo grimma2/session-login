@@ -10,6 +10,8 @@ from .forms import PhoneForm, CodeForm
 from .utils import send_request_phone, send_sign_in
 
 
+client = TelegramClient(StringSession(), os.environ['API_ID'], os.environ['API_HASH'])
+
 class EnterPhone(View):
 
     def get(self, request):
@@ -24,7 +26,6 @@ class EnterPhone(View):
             phone = form.cleaned_data['phone']
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            client = TelegramClient(StringSession(), os.environ['API_ID'], os.environ['API_HASH'])
 
             sent = loop.run_until_complete(send_request_phone(client=client, phone=phone))
             request.session['phone_code_hash'] = sent
@@ -48,8 +49,6 @@ class EnterCode(View):
         if form.is_valid():
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            print(open('session.txt').read())
-            client = TelegramClient(StringSession(open('session.txt').read()), os.environ['API_ID'], os.environ['API_HASH'])
             loop.run_until_complete(send_sign_in(request_post=request.POST, client=client))
         else:
             render(request, 'mainapp/enter_code.html', context={'form': form})

