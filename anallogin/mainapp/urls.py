@@ -5,7 +5,7 @@ from .views import EnterPhone, EnterCode
 
 urlpatterns = [
     path('enter-phone/', EnterPhone.as_view(), name='enter_phone'),
-    path('enter-code/', EnterCode.as_view(), name='enter_oce')
+    path('enter-code/', EnterCode.as_view(), name='enter_code')
 ]
 
 

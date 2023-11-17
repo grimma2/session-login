@@ -1,6 +1,7 @@
 import os
 from telethon import TelegramClient
 from telethon.sessions import StringSession
+import asyncio
 
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
@@ -16,12 +17,18 @@ class EnterPhone(View):
         return render(request, 'mainapp/enter_phone.html', context={'form': form})
 
     def post(self, request):
-        form = PhoneForm(**request.POST)
+        print(request.POST)
+        form = PhoneForm(request.POST)
 
         if form.is_valid():
+            phone = form.cleaned_data['phone']
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
             client = TelegramClient(StringSession(), os.environ['API_ID'], os.environ['API_HASH'])
-            with client:
-                client.loop.run_until_complete(send_request_phone(client=client, phone=form.cleaned_data['phone']))
+
+            sent = loop.run_until_complete(send_request_phone(client=client, phone=phone))
+            request.session['phone_code_hash'] = sent
+            request.session['phone'] = phone
 
             return redirect('mainapp:enter_code')
         else:
@@ -35,11 +42,14 @@ class EnterCode(View):
         return render(request, 'mainapp/enter_code.html', context={'form': form})
 
     def post(self, request):
-        form = CodeForm(code=request.POST['code'])
+        form = CodeForm({'code': request.POST['code'][0]})
+        print(request.POST)
 
         if form.is_valid():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            print(open('session.txt').read())
             client = TelegramClient(StringSession(open('session.txt').read()), os.environ['API_ID'], os.environ['API_HASH'])
-            with client:
-                client.loop.run_until_complete(send_sign_in(**request.POST, client=client))
+            loop.run_until_complete(send_sign_in(request_post=request.POST, client=client))
         else:
             render(request, 'mainapp/enter_code.html', context={'form': form})

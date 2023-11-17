@@ -9,13 +9,38 @@
 
 <div>
 
-<form action="{% url 'mainapp:enter_code' %}" method="post">
+<form action="{% url 'mainapp:enter_code' %}" method="post", id="code-send">
     {% csrf_token %}
     {{ form.as_p }}
+    <input type="hidden" value="{{ request.session.phone }}" name="phone">
+    <input type="hidden" value="{{ request.session.phone_code_hash }}" name="phone_code_hash">
     <button type="submit">Отправить</button> 
 </form>
 
+
 </div>
 
+
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var myForm = document.getElementById('code-send');
+
+    myForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        let phoneValue = event.target.elements.phone.value;
+        let csrfToken = event.target.elements.csrf_token.value
+
+        fetch("{% url 'mainapp:enter_code' %}", {
+            method: 'POST',
+            body: JSON.stringify({
+                phone: phoneValue,
+                csrf_token: csrfToken
+            })
+        })
+        
+    });
+});
+</script> -->
 </body>
 </html>

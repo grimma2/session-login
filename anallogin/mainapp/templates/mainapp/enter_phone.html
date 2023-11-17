@@ -17,20 +17,5 @@
 </form>
 
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var myForm = document.getElementById('phone-send');
-
-    myForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var phoneValue = document.getElementById('phone').value;
-
-    localStorage.setItem('phone', phoneValue);
-
-    myForm.submit();
-    });
-});
-</script>
 </body>
 </html>

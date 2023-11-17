@@ -8,10 +8,10 @@ class PhoneForm(forms.Form):
     def clean_phone(self):
         data = self.cleaned_data['phone']
         
-        if not data.startswith('+7'):
-            raise ValidationError('Телефон должен начинаться на +7')
+        #if not data.startswith('+7'):
+        #    raise ValidationError('Телефон должен начинаться на +7')
         
-        for digit in data:
+        for digit in data[1:]:
             try:
                 int(digit)
             except ValueError:

@@ -7,6 +7,7 @@ __pycache__/
 *.so
 *.session
 test.py
+session.txt
 # Distribution / packaging
 .Python
 build/
